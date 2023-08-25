@@ -199,34 +199,5 @@ body {
     transform: translateY(-50%);
     color: #333; /* Cor preta */
   }
-  @media (max-width: 768px) {
-    .header {
-      padding: 0.2rem; /* Ajuste responsivo do padding */
-    }
   
-    .logo {
-      width: 6vw; /* Tamanho da logo responsivo */
-      height: 6vw; /* Tamanho da logo responsivo */
-    }
-  
-    .discord-link i {
-      font-size: 30px;
-      margin-right: 20px;
-    }
-  
-    .header h1 {
-      font-size: 2rem;
-    }
-  
-    .header-content {
-      font-size: 14px;
-    }
-  
-    .header-icons {
-      display: none;
-    }
-  
-    .search-box {
-      display: block;
-    }
-  }
+}
