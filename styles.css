@@ -9,69 +9,38 @@ body {
   font-family: Arial, sans-serif;
   overflow: hidden;
   background-color: black;
+  font-size: 16px; /* Tamanho de fonte responsivo */
 }
 
-/* Restante do seu código... */
 
-/* Estilos responsivos */
-@media screen and (max-width: 768px) {
-  /* Aplique estilos diferentes para telas menores */
-  .ranking {
-    margin-top: 100px;
-  }
-  
-  .header {
-    padding: 0.5rem;
-  }
-  
-  .logo {
-    width: 30px;
-    height: 30px;
-  }
-  
-  /* Outros ajustes necessários... */
+.video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-/* Outras media queries conforme necessário */
+.background-video {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Faz o vídeo ocupar toda a altura da tela */
+  overflow: hidden;
+}
 
+#bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  min-height: 100%; /* Faz o vídeo ocupar toda a altura mínima da tela */
+  object-fit: cover; /* Encaixa o vídeo na tela */
+  z-index: -1;
+  opacity: 0.5; /* Opacidade baixa */
+}
 
-
-
-body {
-    margin: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-    background-color: black; /* Define uma cor de fundo para evitar áreas brancas */
-  }
-
-  .video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .background-video {
-    position: relative;
-    width: 100%;
-    height: 100vh; /* Faz o vídeo ocupar toda a altura da tela */
-    overflow: hidden;
-  }
-  
-  #bg-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    min-height: 100%; /* Faz o vídeo ocupar toda a altura mínima da tela */
-    object-fit: cover; /* Encaixa o vídeo na tela */
-    z-index: -1;
-    opacity: 0.5; /* Opacidade baixa */
-  }
 
   .ranking {
     position: relative;
@@ -122,17 +91,24 @@ body {
   }
   
   .logo {
-    width: 50px;
-    height: 50px; /* Define um tamanho fixo para a logo */
+    width: 4vw;
+    height: 4vw; /* Define um tamanho fixo para a logo */
     margin-right: 10px;
     border-radius: 50%;
   }
   
-  .header-content {
-    flex: 1;
+  .header {
+    background-color: #333;
+    color: white;
     text-align: center;
-    overflow: hidden; /* Esconde o conteúdo que ultrapassar a largura */
-    text-overflow: ellipsis; /* Adiciona reticências no final se o conteúdo não couber */
+    padding: 0.5rem; /* Ajuste responsivo do padding */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    font-family: myFirstFont;
   }
   
   .discord-link {
@@ -222,4 +198,35 @@ body {
     top: 50%;
     transform: translateY(-50%);
     color: #333; /* Cor preta */
+  }
+  @media (max-width: 768px) {
+    .header {
+      padding: 0.2rem; /* Ajuste responsivo do padding */
+    }
+  
+    .logo {
+      width: 6vw; /* Tamanho da logo responsivo */
+      height: 6vw; /* Tamanho da logo responsivo */
+    }
+  
+    .discord-link i {
+      font-size: 30px;
+      margin-right: 20px;
+    }
+  
+    .header h1 {
+      font-size: 2rem;
+    }
+  
+    .header-content {
+      font-size: 14px;
+    }
+  
+    .header-icons {
+      display: none;
+    }
+  
+    .search-box {
+      display: block;
+    }
   }
