@@ -26,7 +26,7 @@ fetchPlayersData().then(data => {
   updatePageIndicator(); // Atualiza o indicador de página
 });
 
-const playersPerPage = 10;
+const playersPerPage = 15;
 let currentPage = 1;
 
 const tableBody = document.getElementById('table-body');
