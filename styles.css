@@ -16,10 +16,12 @@ body {
 
 .video-container {
   position: absolute;
-  top: 0;
+  top: -10%;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
-  height: 100%;
+  height: 130%;
   overflow: hidden;
 }
 
@@ -28,7 +30,7 @@ body {
   width: 100%;
   height: 100vh;
   /* Faz o vídeo ocupar toda a altura da tela */
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 #bg-video {
@@ -139,9 +141,13 @@ header h1 {
   margin: 0;
   padding: 0;
   letter-spacing: 5px;
+  font-weight: 100;
 }
 
 .pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   text-align: center;
   margin-top: 1rem;
 }
@@ -177,9 +183,6 @@ header h1 {
 
 .search-box {
   position: relative;
-  margin-left: 20px;
-  display: none;
-  /*ativar para pesquisar */
 }
 
 #search-input {

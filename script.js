@@ -86,17 +86,27 @@ updateTable();
 updatePageIndicator();
 
 
-document.getElementById('search-icon').addEventListener('click', function () {
-  filterPlayers();
+// document.getElementById('search-icon').addEventListener('click', function () {
+//   filterPlayers();
+// });
+//
+// document.getElementById('search-input').addEventListener('input', function () {
+//   filterPlayers();
+// });
+
+document.querySelector('#search-input').addEventListener('keydown',  (event) => {
+  filterPlayers2(event.target.value);
 });
 
-document.getElementById('search-input').addEventListener('input', function () {
-  filterPlayers();
-});
+async function filterPlayers2(input) {
+  const players = await fetchPlayersData()
+  
+  console.log(players.filter((p) => p.name === input))
+}
 
 async function filterPlayers() {
   const searchValue = document.getElementById('search-input').value.toLowerCase();
-
+  
   if(searchValue != "") {
     try {
       const response = await fetch('https://raw.githubusercontent.com/SC-KOTH/Rank/main/resultado.txt');
@@ -110,9 +120,7 @@ async function filterPlayers() {
     const filteredPlayers = playersData1.filter(({ name }) => name.toLowerCase() === searchValue);
   
     playersData = filteredPlayers;
-    console.log(filteredPlayers);
     
-  
     playersData.forEach(player => {
         player.kd = player.deaths !== 0 ? (player.kills / player.deaths).toFixed(2) : player.kills.toFixed(2);
     });
@@ -140,3 +148,4 @@ async function filterPlayers() {
     });
   };
 }
+
