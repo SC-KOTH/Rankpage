@@ -3,65 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Este é o site de ranking de jogadores da SC KOTH Brasil. Veja as posições, baixas, mortes, tiro mais longo, e mais estatísticas dos jogadores.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <title>Ranking de Jogadores</title>
-    <script src="
-https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js
-"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
 <body>
-<header class="header"><a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank"><img
-        src="logo.png" alt="Logo da Empresa" class="logo"></a>
-
-    <div class="header-content">
-        <h1>
-            RANK SC KOTH BRASIL
-        </h1>
-    </div>
-    <div class="header-icons">
-
-        <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank" class="discord-link"><i
-                class="fab fa-discord"></i>
+    <header class="header">
+        <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank">
+            <img src="logo.png" alt="Logo da Empresa" class="logo">
         </a>
-    </div>
-</header>
-<main>
-    <section class="background-video">
-        <div class="video-container">
-            <video autoplay muted loop id="bg-video">
-                <source src="video.mp4" type="video/mp4">
-            </video>
+        <div class="header-content">
+            <h1>RANK SC KOTH BRASIL</h1>
         </div>
-        <section class="ranking">
-            <table>
-                <thead>
-                <tr>
-                    <th>Posição</th>
-                    <th>Jogador</th>
-                    <th>Baixas</th>
-                    <th>Mortes</th>
-                    <th>Tiro Mais Longo</th>
-                    <th>HS mais longo</th>
-                    <th>Maior Kill Streak</th>
-                    <th>K/D</th>
-                </tr>
-                </thead>
-                <tbody id="table-body">
-
-                </tbody>
-            </table>
-            <div class="pagination">
-                <button id="prev-page">Anterior</button>
-                <div class="search-box">
-                    <i class="fas fa-search" id="search-icon"></i>
-                    <input type="text" id="search-input" placeholder="Buscar jogador">
-                </div>
-                <button id="next-page">Próxima</button>
+        <div class="header-icons">
+            <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank" class="discord-link">
+                <i class="fab fa-discord"></i>
+            </a>
+        </div>
+    </header>
+    <main>
+        <section class="background-video">
+            <div class="video-container">
+                <video autoplay muted loop id="bg-video">
+                    <source src="video.mp4" type="video/mp4">
+                </video>
             </div>
+            <section class="ranking">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Jogador</th>
+                                <th>Baixas</th>
+                                <th>Mortes</th>
+                                <th>Tiro Mais Longo</th>
+                                <th>HS mais longo</th>
+                                <th>Maior Kill Streak</th>
+                                <th>K/D</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button id="prev-page">Anterior</button>
+                    <div class="search-box">
+                        <i class="fas fa-search" id="search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Buscar Jogador   Nick/UID">
+                    </div>
+                    <button id="next-page">Próxima</button>
+                </div>
+            </section>
         </section>
-
-</main>
-<script src="script2.js"></script>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>

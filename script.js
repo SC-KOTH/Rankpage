@@ -1,151 +1,116 @@
-// Função para buscar a lista de jogadores a partir do arquivo de texto
-async function fetchPlayersData() {
-  try {
-    const response = await fetch('https://raw.githubusercontent.com/SC-KOTH/Rank/main/resultado.txt');
-    if (!response.ok) {
-      throw new Error('Erro na requisição');
+const config = {
+    fieldFilter: '',
+    listPlayers: [],
+    pagination: {
+        perPage: calculatePlayersPerPage(),
+        currentPage: 1,
+        totalPages: 0
     }
-    const data = await response.json(); // Use response.json() para interpretar como JSON
-    
-    return data;
-  } catch (error) {
-    console.error('Erro ao buscar dados dos jogadores:', error);
-    return [];
-  }
+};
+
+async function loadPlayers() {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/SC-KOTH/Rank/main/resultado.txt');
+        const players = await response.json();
+
+        players.sort((a, b) => b.kills - a.kills);
+
+        config.listPlayers = players.map((p, i) => ({
+            ...p,
+            position: i + 1,
+            kd: p.deaths !== 0 ? (p.kills / p.deaths).toFixed(2) : p.kills.toFixed(2)
+        }));
+    } catch (error) {
+        console.error('Error loading players:', error);
+    }
 }
 
-let playersData = []; // Declaração da estrutura playersData vazia
-
-// Chamada da função fetchPlayersData para obter os dados dos jogadores
-fetchPlayersData().then(data => {
-  playersData = data; // Atribui os dados obtidos a playersData
-  playersData.forEach(player => {
-    player.kd = player.deaths !== 0 ? (player.kills / player.deaths).toFixed(2) : player.kills.toFixed(2);
-  });
-  updateTable(); // Atualiza a tabela
-  updatePageIndicator(); // Atualiza o indicador de página
-});
-
-const playersPerPage = 15;
-let currentPage = 1;
-
-const tableBody = document.getElementById('table-body');
-const prevPageButton = document.getElementById('prev-page');
-const nextPageButton = document.getElementById('next-page');
-
-function updateTable() {
-  tableBody.innerHTML = '';
-  const startIndex = (currentPage - 1) * playersPerPage;
-  const endIndex = startIndex + playersPerPage;
-  const sortedPlayers = playersData.slice().sort((a, b) => b.kills - a.kills);
-  for (let i = startIndex; i < endIndex && i < sortedPlayers.length; i++) {
-    let player = sortedPlayers[i];
+const createRow = (player) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${i+1}</td>
-      <td>${player.name}</td>
-      <td>${player.kills}</td>
-      <td>${player.deaths}</td>
-      <td>${player.longestShot}</td>
-      <td>${player.headshotLongest}</td>
-      <td>${player.killStreak}</td>
-      <td>${player.kd}</td>
+        <td>${player.position}º</td>
+        <td><strong>${player.name}</strong></td>
+        <td>${player.kills}</td>
+        <td>${player.deaths}</td>
+        <td>${player.longestShot || '-'}</td>
+        <td>${player.headshotLongest || '-'}</td>
+        <td>${player.killStreak || '-'}</td>
+        <td>${player.kd}</td>
     `;
-    tableBody.appendChild(row);
-  }
+    table.appendChild(row);
+};
 
-  prevPageButton.disabled = currentPage === 1;
-  nextPageButton.disabled = endIndex >= sortedPlayers.length;
+const paginate = (array, pageSize, pageNumber) => {
+    return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+};
+
+const clearTable = () => {
+    table.innerHTML = '';
+};
+
+const filterPlayers = () => {
+    config.fieldFilter = input.value.toLowerCase().replace(/\s+/g, '');
+    config.pagination.currentPage = 1;
+    clearTable();
+    main();
+};
+
+const updatePaginationButtons = () => {
+    pagePrevious.disabled = config.pagination.currentPage <= 1;
+    pageNext.disabled = config.pagination.currentPage >= config.pagination.totalPages;
+};
+
+const table = document.querySelector('#table-body');
+const input = document.querySelector('#search-input');
+input.addEventListener('input', filterPlayers);
+
+const pagePrevious = document.querySelector('#prev-page');
+pagePrevious.addEventListener('click', () => handlePagination('<'));
+
+const pageNext = document.querySelector('#next-page');
+pageNext.addEventListener('click', () => handlePagination('>'));
+
+function calculatePlayersPerPage() {
+    const screenHeight = window.innerHeight;
+    return Math.floor(screenHeight / 60);
 }
 
-const pageIndicator = document.getElementById('page-indicator');
-
-function updatePageIndicator() {
-  const maxPages = Math.ceil(playersData.length / playersPerPage);
-  pageIndicator.textContent = `Página ${currentPage} de ${maxPages}`;
-}
-
-prevPageButton.addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage--;
-    updateTable();
-    updatePageIndicator();
-  }
-});
-
-nextPageButton.addEventListener('click', () => {
-  const maxPages = Math.ceil(playersData.length / playersPerPage);
-  if (currentPage < maxPages) {
-    currentPage++;
-    updateTable();
-    updatePageIndicator();
-  }
-});
-
-updateTable();
-updatePageIndicator();
-
-
-// document.getElementById('search-icon').addEventListener('click', function () {
-//   filterPlayers();
-// });
-//
-// document.getElementById('search-input').addEventListener('input', function () {
-//   filterPlayers();
-// });
-
-document.querySelector('#search-input').addEventListener('keydown',  (event) => {
-  filterPlayers2(event.target.value);
-});
-
-async function filterPlayers2(input) {
-  const players = await fetchPlayersData()
-  
-  console.log(players.filter((p) => p.name === input))
-}
-
-async function filterPlayers() {
-  const searchValue = document.getElementById('search-input').value.toLowerCase();
-  
-  if(searchValue != "") {
-    try {
-      const response = await fetch('https://raw.githubusercontent.com/SC-KOTH/Rank/main/resultado.txt');
-    if (!response.ok) {
-      console.error('Erro na requisição');
-      return;
+const handlePagination = (type) => {
+    if (type === '>' && config.pagination.currentPage < config.pagination.totalPages) {
+        config.pagination.currentPage++;
+    } else if (type === '<' && config.pagination.currentPage > 1) {
+        config.pagination.currentPage--;
     }
     
-    const playersData1 = await response.json();
-    
-    const filteredPlayers = playersData1.filter(({ name }) => name.toLowerCase() === searchValue);
-  
-    playersData = filteredPlayers;
-    
-    playersData.forEach(player => {
-        player.kd = player.deaths !== 0 ? (player.kills / player.deaths).toFixed(2) : player.kills.toFixed(2);
-    });
-    updateTable(); // Atualiza a tabela
-    updatePageIndicator(); // Atualiza o indicador de página
-    } catch (error) {
-      fetchPlayersData().then(data => {
-        playersData = data; // Atribui os dados obtidos a playersData
-        playersData.forEach(player => {
-          player.kd = player.deaths !== 0 ? (player.kills / player.deaths).toFixed(2) : player.kills.toFixed(2);
-        });
-        updateTable(); // Atualiza a tabela
-        updatePageIndicator(); // Atualiza o indicador de página
-      });
-      
-    }
-  } else {
-    fetchPlayersData().then(data => {
-      playersData = data; // Atribui os dados obtidos a playersData
-      playersData.forEach(player => {
-        player.kd = player.deaths !== 0 ? (player.kills / player.deaths).toFixed(2) : player.kills.toFixed(2);
-      });
-      updateTable(); // Atualiza a tabela
-      updatePageIndicator(); // Atualiza o indicador de página
-    });
-  };
+    clearTable();
+    main();
+};
+
+async function main() {
+    await loadPlayers();
+
+    const filtered = config.listPlayers.filter(p =>
+        p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
+        p.uid.includes(config.fieldFilter)
+    );
+
+    config.pagination.totalPages = Math.ceil(filtered.length / config.pagination.perPage);
+
+    updatePaginationButtons();
+
+    const paginated = paginate(filtered, config.pagination.perPage, config.pagination.currentPage);
+    paginated.forEach(createRow);
 }
 
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        config.pagination.perPage = calculatePlayersPerPage();
+        config.pagination.currentPage = 1;
+        clearTable();
+        main();
+    }, 200);
+});
+
+main();
