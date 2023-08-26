@@ -93,7 +93,12 @@ const handlePagination = (type) => {
 async function main() {
     await loadPlayers();
 
-    const filteredAndSorted = sortPlayers();
+    const filtered = config.listPlayers.filter(p =>
+        p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
+        p.uid.includes(config.fieldFilter)
+    );
+
+    const filteredAndSorted = sortPlayers(filtered);
 
     config.pagination.totalPages = Math.ceil(filteredAndSorted.length / config.pagination.perPage);
 
@@ -101,7 +106,7 @@ async function main() {
 
     const paginated = paginate(filteredAndSorted, config.pagination.perPage, config.pagination.currentPage);
 
-    clearTable(); // Limpa a tabela antes de criar as novas linhas
+    clearTable();
     paginated.forEach(createRow);
 }
 
@@ -123,15 +128,12 @@ const sortData = {
     order: "" // "asc" for crescente, "desc" for decrescente
 };
 
-function sortPlayers() {
+function sortPlayers(players) {
     const { column, order } = sortData;
     if (column && order) {
-        const filtered = config.listPlayers.filter(p =>
-            p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
-            p.uid.includes(config.fieldFilter)
-        );
+        const sorted = [...players];
 
-        filtered.sort((a, b) => {
+        sorted.sort((a, b) => {
             const aValue = a[column];
             const bValue = b[column];
 
@@ -146,10 +148,11 @@ function sortPlayers() {
             }
         });
 
-        return filtered;
+        return sorted;
     }
-    return config.listPlayers;
+    return players;
 }
+
 
 
 const sortIcons = document.querySelectorAll(".sort-icon");
@@ -157,10 +160,10 @@ sortIcons.forEach(icon => {
     icon.addEventListener("click", event => {
         const clickedColumn = event.target.getAttribute("data-column");
         if (clickedColumn === sortData.column) {
-            sortData.order = sortData.order === "desc" ? "asc" : "desc";
+            sortData.order = sortData.order === "asc" ? "desc" : "asc";
         } else {
             sortData.column = clickedColumn;
-            sortData.order = "desc";
+            sortData.order = "asc";
         }
         
         const filtered = config.listPlayers.filter(p =>
@@ -173,6 +176,7 @@ sortIcons.forEach(icon => {
         main(); // Gera a tabela com jogadores filtrados e ordenados
     });
 });
+
 
 // Adicione um evento de clique ao título para recarregar a página
 const title = document.getElementById('title');
@@ -202,3 +206,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   audioElement.volume = 0.3; // Defina o volume inicial
 });
+
+main(); // Carregar dados iniciais
+filterPlayers(); // Aplicar filtragem inicial
