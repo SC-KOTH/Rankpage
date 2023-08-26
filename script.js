@@ -153,8 +153,6 @@ function sortPlayers(players) {
     return players;
 }
 
-
-
 const sortIcons = document.querySelectorAll(".sort-icon");
 sortIcons.forEach(icon => {
     icon.addEventListener("click", event => {
@@ -177,35 +175,8 @@ sortIcons.forEach(icon => {
     });
 });
 
-
 // Adicione um evento de clique ao título para recarregar a página
 const title = document.getElementById('title');
 title.addEventListener('click', () => {
     location.reload(); // Recarrega a página
 });
-
-//mutador de som
-document.addEventListener("DOMContentLoaded", function() {
-  const audioElement = document.getElementById("background-music");
-  const muteButton = document.getElementById("mute-button");
-
-  let isMuted = false;
-
-  muteButton.addEventListener("click", function() {
-    if (isMuted) {
-      audioElement.volume = 0.3;
-      muteButton.innerHTML = '<i class="fas fa-volume-up"></i>';
-      muteButton.classList.remove("muted"); // Remove a classe "muted"
-    } else {
-      audioElement.volume = 0;
-      muteButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
-      muteButton.classList.add("muted"); // Adiciona a classe "muted"
-    }
-    isMuted = !isMuted;
-  });
-
-  audioElement.volume = 0.3; // Defina o volume inicial
-});
-
-main(); // Carregar dados iniciais
-filterPlayers(); // Aplicar filtragem inicial

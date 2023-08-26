@@ -212,26 +212,3 @@ header h1 {
 .sort-icon[data-order="desc"]::before {
   content: '\2193'; /* Seta para baixo */
 }
-
-/* Estilize o botão de mute */
-#mute-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 5px; /* Adicione um espaçamento interno */
-}
-
-#mute-button i {
-  font-size: 24px; /* Tamanho do ícone */
-  color: white; /* Cor padrão do ícone */
-  transition: color 0.3s; /* Adicione uma transição suave de cor */
-}
-
-#mute-button:hover i {
-  color: red; /* Cor do ícone ao passar o mouse */
-}
-
-/* Estilize o botão de mute quando estiver mudo */
-#mute-button.muted i {
-  color: red; /* Cor do ícone quando estiver mudo */
-}
