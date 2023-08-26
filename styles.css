@@ -99,6 +99,10 @@ tr:nth-child(even) {
   font-family: myFirstFont;
 }
 
+.header h1 {
+  cursor: pointer; /* Adicione esta linha para alterar o cursor para "pointer" */
+}
+
 .discord-link {
   display: flex;
   align-items: center;
@@ -168,6 +172,11 @@ header h1 {
   width: 200px;
   transition: box-shadow 0.3s, background-color 0.3s;
   padding-left: 35px;
+  caret-color: red; /* Substitua 'red' pela cor que você deseja para o cursor */
+}
+
+#teste:hover {
+  color: red; /* Altere para a cor desejada */
 }
 
 #search-input:focus {
@@ -182,4 +191,47 @@ header h1 {
   top: 50%;
   transform: translateY(-50%);
   color: #333;
+}
+
+.sort-icon {
+  font-size: 14px;
+  margin-left: 5px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.sort-icon:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.sort-icon[data-order="asc"]::before {
+  content: '\2191'; /* Seta para cima */
+}
+
+.sort-icon[data-order="desc"]::before {
+  content: '\2193'; /* Seta para baixo */
+}
+
+/* Estilize o botão de mute */
+#mute-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px; /* Adicione um espaçamento interno */
+}
+
+#mute-button i {
+  font-size: 24px; /* Tamanho do ícone */
+  color: white; /* Cor padrão do ícone */
+  transition: color 0.3s; /* Adicione uma transição suave de cor */
+}
+
+#mute-button:hover i {
+  color: red; /* Cor do ícone ao passar o mouse */
+}
+
+/* Estilize o botão de mute quando estiver mudo */
+#mute-button.muted i {
+  color: red; /* Cor do ícone quando estiver mudo */
 }

@@ -15,9 +15,12 @@
             <img src="logo.png" alt="Logo da Empresa" class="logo">
         </a>
         <div class="header-content">
-            <h1>RANK SC KOTH BRASIL</h1>
+            <h1 id="title">RANK SC KOTH BRASIL</h1>
         </div>
         <div class="header-icons">
+            <button id="mute-button">
+                <i class="fas fa-volume-up"></i>
+            </button>
             <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank" class="discord-link">
                 <i class="fab fa-discord"></i>
             </a>
@@ -35,14 +38,14 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Posição</th>
+                                <th>Posição<i class="sort-icon fas fa-sort" data-column="position"></i></th>
                                 <th>Jogador</th>
-                                <th>Baixas</th>
-                                <th>Mortes</th>
-                                <th>Tiro Mais Longo</th>
-                                <th>HS mais longo</th>
-                                <th>Maior Kill Streak</th>
-                                <th>K/D</th>
+                                <th>Baixas<i class="sort-icon fas fa-sort" data-column="kills"></i></th>
+                                <th>Mortes<i class="sort-icon fas fa-sort" data-column="deaths"></i></th>
+                                <th>Tiro Mais Longo<i class="sort-icon fas fa-sort" data-column="longestShot"></i></th>
+                                <th>HS mais longo<i class="sort-icon fas fa-sort" data-column="headshotLongest"></i></th>
+                                <th>Maior Kill Streak<i class="sort-icon fas fa-sort" data-column="killStreak"></i></th>
+                                <th>K/D<i class="sort-icon fas fa-sort" data-column="kd"></i></th>
                             </tr>
                         </thead>
                         <tbody id="table-body"></tbody>
@@ -60,5 +63,8 @@
         </section>
     </main>
     <script src="script.js"></script>
+      <audio id="background-music" autoplay loop controls>
+        <source src="Musica.mp3" type="audio/mpeg">
+      </audio>
 </body>
 </html>

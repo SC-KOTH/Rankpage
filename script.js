@@ -29,7 +29,7 @@ const createRow = (player) => {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${player.position}º</td>
-        <td><strong>${player.name}</strong></td>
+        <td id="teste"><strong>${player.name}</strong></td>
         <td>${player.kills}</td>
         <td>${player.deaths}</td>
         <td>${player.longestShot || '-'}</td>
@@ -40,9 +40,14 @@ const createRow = (player) => {
     table.appendChild(row);
 };
 
+
+
 const paginate = (array, pageSize, pageNumber) => {
-    return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    const startIndex = (pageNumber - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return array.slice(startIndex, endIndex);
 };
+
 
 const clearTable = () => {
     table.innerHTML = '';
@@ -51,9 +56,9 @@ const clearTable = () => {
 const filterPlayers = () => {
     config.fieldFilter = input.value.toLowerCase().replace(/\s+/g, '');
     config.pagination.currentPage = 1;
-    clearTable();
-    main();
+    main(); // Atualiza a tabela com a filtragem e ordenação aplicadas
 };
+
 
 const updatePaginationButtons = () => {
     pagePrevious.disabled = config.pagination.currentPage <= 1;
@@ -81,24 +86,22 @@ const handlePagination = (type) => {
     } else if (type === '<' && config.pagination.currentPage > 1) {
         config.pagination.currentPage--;
     }
-    
-    clearTable();
-    main();
+
+    main(); // Atualiza a tabela após mudar a página
 };
 
 async function main() {
     await loadPlayers();
 
-    const filtered = config.listPlayers.filter(p =>
-        p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
-        p.uid.includes(config.fieldFilter)
-    );
+    const filteredAndSorted = sortPlayers();
 
-    config.pagination.totalPages = Math.ceil(filtered.length / config.pagination.perPage);
+    config.pagination.totalPages = Math.ceil(filteredAndSorted.length / config.pagination.perPage);
 
     updatePaginationButtons();
 
-    const paginated = paginate(filtered, config.pagination.perPage, config.pagination.currentPage);
+    const paginated = paginate(filteredAndSorted, config.pagination.perPage, config.pagination.currentPage);
+
+    clearTable(); // Limpa a tabela antes de criar as novas linhas
     paginated.forEach(createRow);
 }
 
@@ -114,3 +117,88 @@ window.addEventListener('resize', () => {
 });
 
 main();
+
+const sortData = {
+    column: "",
+    order: "" // "asc" for crescente, "desc" for decrescente
+};
+
+function sortPlayers() {
+    const { column, order } = sortData;
+    if (column && order) {
+        const filtered = config.listPlayers.filter(p =>
+            p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
+            p.uid.includes(config.fieldFilter)
+        );
+
+        filtered.sort((a, b) => {
+            const aValue = a[column];
+            const bValue = b[column];
+
+            if (order === "asc") {
+                if (aValue < bValue) return -1;
+                if (aValue > bValue) return 1;
+                return 0;
+            } else {
+                if (aValue < bValue) return 1;
+                if (aValue > bValue) return -1;
+                return 0;
+            }
+        });
+
+        return filtered;
+    }
+    return config.listPlayers;
+}
+
+
+const sortIcons = document.querySelectorAll(".sort-icon");
+sortIcons.forEach(icon => {
+    icon.addEventListener("click", event => {
+        const clickedColumn = event.target.getAttribute("data-column");
+        if (clickedColumn === sortData.column) {
+            sortData.order = sortData.order === "desc" ? "asc" : "desc";
+        } else {
+            sortData.column = clickedColumn;
+            sortData.order = "desc";
+        }
+        
+        const filtered = config.listPlayers.filter(p =>
+            p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
+            p.uid.includes(config.fieldFilter)
+        );
+        
+        sortPlayers(filtered); // Passa a lista filtrada para a função de ordenação
+        config.pagination.currentPage = 1;
+        main(); // Gera a tabela com jogadores filtrados e ordenados
+    });
+});
+
+// Adicione um evento de clique ao título para recarregar a página
+const title = document.getElementById('title');
+title.addEventListener('click', () => {
+    location.reload(); // Recarrega a página
+});
+
+//mutador de som
+document.addEventListener("DOMContentLoaded", function() {
+  const audioElement = document.getElementById("background-music");
+  const muteButton = document.getElementById("mute-button");
+
+  let isMuted = false;
+
+  muteButton.addEventListener("click", function() {
+    if (isMuted) {
+      audioElement.volume = 0.3;
+      muteButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+      muteButton.classList.remove("muted"); // Remove a classe "muted"
+    } else {
+      audioElement.volume = 0;
+      muteButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      muteButton.classList.add("muted"); // Adiciona a classe "muted"
+    }
+    isMuted = !isMuted;
+  });
+
+  audioElement.volume = 0.3; // Defina o volume inicial
+});
