@@ -175,10 +175,6 @@ header h1 {
   caret-color: red; /* Substitua 'red' pela cor que você deseja para o cursor */
 }
 
-#teste:hover {
-  color: red; /* Altere para a cor desejada */
-}
-
 #search-input:focus {
   outline: none;
   box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
@@ -211,4 +207,9 @@ header h1 {
 
 .sort-icon[data-order="desc"]::before {
   content: '\2193'; /* Seta para baixo */
+}
+
+/* Estilo para mudar a cor do texto quando o mouse passa sobre uma linha da tabela */
+tr:hover td {
+  color: red;
 }

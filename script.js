@@ -24,12 +24,12 @@ async function loadPlayers() {
         console.error('Error loading players:', error);
     }
 }
-
+// ...
 const createRow = (player) => {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td>${player.position}º</td>
-        <td id="teste"><strong>${player.name}</strong></td>
+        <td><strong>${player.name}</strong></td>
         <td>${player.kills}</td>
         <td>${player.deaths}</td>
         <td>${player.longestShot || '-'}</td>
@@ -39,8 +39,7 @@ const createRow = (player) => {
     `;
     table.appendChild(row);
 };
-
-
+// ...
 
 const paginate = (array, pageSize, pageNumber) => {
     const startIndex = (pageNumber - 1) * pageSize;
