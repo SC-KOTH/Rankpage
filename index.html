@@ -32,6 +32,20 @@
                     </video>
                 </div>
                 <section class="ranking">
+                    <div class="pagination">
+                        <div>
+                        <button class="paginas" id="prev-page">Anterior</button>
+                        <button class="paginas" id="next-page">Próxima</button>
+                    </div>
+                        <div class="search-box">
+                            <i class="fas fa-search" id="search-icon"></i>
+                            <input type="text" id="search-input" placeholder="Buscar Jogador Nick/UID">
+                        </div>
+                        <div class="toggle-buttons">
+                            <button id="toggle-general" class="table-toggle-btn selected">Geral</button>
+                            <button id="toggle-weekly" class="table-toggle-btn">Semanal</button>                     
+                        </div>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -48,20 +62,6 @@
                             </thead>
                             <tbody id="table-body"></tbody>
                         </table>
-                    </div>
-                    <div class="pagination">
-                        <div>
-                        <button class="paginas" id="prev-page">Anterior</button>
-                        <button class="paginas" id="next-page">Próxima</button>
-                    </div>
-                        <div class="search-box">
-                            <i class="fas fa-search" id="search-icon"></i>
-                            <input type="text" id="search-input" placeholder="Buscar Jogador   Nick/UID">
-                        </div>
-                        <div class="toggle-buttons">
-                            <button id="toggle-general" class="table-toggle-btn selected">Geral</button>
-                            <button id="toggle-weekly" class="table-toggle-btn">Semanal</button>                     
-                        </div>
                     </div>
                 </section>
             </section>
