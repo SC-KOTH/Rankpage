@@ -106,7 +106,7 @@ tr:nth-child(even) {
 .discord-link {
   display: flex;
   align-items: center;
-  color: #5865F2;
+  color: #4351f3;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -133,7 +133,7 @@ header h1 {
   margin-top: 1rem;
 }
 
-.pagination button {
+.pagination .paginas {
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
   background-color: #333;
@@ -148,6 +148,9 @@ header h1 {
   cursor: not-allowed;
 }
 
+.pagination .paginas:hover {
+  background-color: #4351f3;
+}
 #page-indicator {
   margin: 0 1rem;
 }
@@ -172,7 +175,7 @@ header h1 {
   width: 200px;
   transition: box-shadow 0.3s, background-color 0.3s;
   padding-left: 35px;
-  caret-color: red; /* Substitua 'red' pela cor que você deseja para o cursor */
+  caret-color: #4351f3;
 }
 
 #search-input:focus {
@@ -211,5 +214,31 @@ header h1 {
 
 /* Estilo para mudar a cor do texto quando o mouse passa sobre uma linha da tabela */
 tr:hover td {
-  color: red;
+  color: #4351f3;
+  transform: scale(1.1);
+  transition: all .2s ease-in-out;
+}
+
+/* Estilos para os botões de alternância das tabelas */
+.table-toggle-btn {
+  padding: 0.5rem 1rem;
+  margin: 0 0.2rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.general-table-btn {
+  background-color: #333; /* Cor padrão para o botão geral */
+}
+
+.weekly-table-btn {
+  background-color: #555; /* Cor padrão para o botão semanal */
+}
+
+/* Estilos para indicar a tabela exibida */
+.selected {
+  background-color: #4351f3;
 }

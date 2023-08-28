@@ -1,6 +1,8 @@
 const config = {
     fieldFilter: '',
     listPlayers: [],
+    weeklyPlayers: [],
+    showWeekly: false,
     pagination: {
         perPage: calculatePlayersPerPage(),
         currentPage: 1,
@@ -24,7 +26,72 @@ async function loadPlayers() {
         console.error('Error loading players:', error);
     }
 }
-// ...
+
+async function loadWeeklyPlayers() {
+    try {
+        const initialResponse = await fetch('https://raw.githubusercontent.com/SC-KOTH/Rank/main/resultado.txt');
+        const finalResponse = await fetch('https://raw.githubusercontent.com/SC-KOTH/Rank/main/resultado2.txt');
+        const initialPlayers = await initialResponse.json();
+        const finalPlayers = await finalResponse.json();
+
+        const uidToInitialPlayer = {}; // Mapa de uid para jogador inicial
+        initialPlayers.forEach(player => {
+            uidToInitialPlayer[player.uid] = player;
+        });
+
+        finalPlayers.sort((a, b) => a.name.localeCompare(b.name));
+
+        const weeklyPlayers = finalPlayers.map((finalPlayer) => {
+            const initialPlayer = uidToInitialPlayer[finalPlayer.uid];
+
+            if (initialPlayer) {
+                const weeklyKills = Math.max(initialPlayer.kills - finalPlayer.kills, 0);
+                const weeklyDeaths = Math.max(initialPlayer.deaths - finalPlayer.deaths, 0);
+                const weeklyKd = weeklyDeaths !== 0 ? (weeklyKills / weeklyDeaths).toFixed(2) : (weeklyKills).toFixed(2);
+                return {
+                    ...finalPlayer,
+                    position: 0, // Será definido posteriormente
+                    kills: weeklyKills,
+                    deaths: weeklyDeaths,
+                    longestShot: initialPlayer.longestShot, // Importar Tiro Mais Longo
+                    headshotLongest: initialPlayer.headshotLongest, // Importar HS mais longo
+                    killStreak: initialPlayer.killStreak, // Importar Maior Kill Streak
+                    kd: weeklyKd
+                };
+            } else {
+                return null; // Não há correspondência de uid, não incluir na lista
+            }
+        }).filter(player => player !== null); // Filtrar para remover jogadores nulos
+
+        // Ordenar jogadores semanais com base em kills semanais (decrescente)
+        weeklyPlayers.sort((a, b) => b.kills - a.kills);
+
+        // Atribuir a posição da tabela semanal
+        const weeklyPlayersWithPosition = weeklyPlayers.map((player, index) => ({
+            ...player,
+            position: index + 1
+        }));
+
+        config.weeklyPlayers = weeklyPlayersWithPosition;
+    } catch (error) {
+        console.error('Error loading weekly players:', error);
+    }
+}
+
+// Função para alternar entre ranking geral e ranking semanal
+function toggleRanking(type) {
+    config.showWeekly = type === 'weekly';
+    config.pagination.currentPage = 1;
+    main();
+}
+
+// Event listener para os botões de alternância
+const toggleGeneralButton = document.getElementById('toggle-general');
+const toggleWeeklyButton = document.getElementById('toggle-weekly');
+
+toggleGeneralButton.addEventListener('click', () => toggleRanking('general'));
+toggleWeeklyButton.addEventListener('click', () => toggleRanking('weekly'));
+
 const createRow = (player) => {
     const row = document.createElement('tr');
     row.innerHTML = `
@@ -39,30 +106,11 @@ const createRow = (player) => {
     `;
     table.appendChild(row);
 };
-// ...
 
-const paginate = (array, pageSize, pageNumber) => {
-    const startIndex = (pageNumber - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return array.slice(startIndex, endIndex);
-};
-
-
-const clearTable = () => {
-    table.innerHTML = '';
-};
-
-const filterPlayers = () => {
-    config.fieldFilter = input.value.toLowerCase().replace(/\s+/g, '');
-    config.pagination.currentPage = 1;
-    main(); // Atualiza a tabela com a filtragem e ordenação aplicadas
-};
-
-
-const updatePaginationButtons = () => {
-    pagePrevious.disabled = config.pagination.currentPage <= 1;
-    pageNext.disabled = config.pagination.currentPage >= config.pagination.totalPages;
-};
+function calculatePlayersPerPage() {
+    const screenHeight = window.innerHeight;
+    return Math.floor(screenHeight / 60);
+}
 
 const table = document.querySelector('#table-body');
 const input = document.querySelector('#search-input');
@@ -74,27 +122,44 @@ pagePrevious.addEventListener('click', () => handlePagination('<'));
 const pageNext = document.querySelector('#next-page');
 pageNext.addEventListener('click', () => handlePagination('>'));
 
-function calculatePlayersPerPage() {
-    const screenHeight = window.innerHeight;
-    return Math.floor(screenHeight / 60);
+function paginate(array, pageSize, pageNumber) {
+    const startIndex = (pageNumber - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return array.slice(startIndex, endIndex);
 }
 
-const handlePagination = (type) => {
+function clearTable() {
+    table.innerHTML = '';
+}
+
+function filterPlayers() {
+    config.fieldFilter = input.value.toLowerCase().replace(/\s+/g, '');
+    config.pagination.currentPage = 1;
+    main();
+}
+
+function updatePaginationButtons() {
+    pagePrevious.disabled = config.pagination.currentPage <= 1;
+    pageNext.disabled = config.pagination.currentPage >= config.pagination.totalPages;
+}
+
+function handlePagination(type) {
     if (type === '>' && config.pagination.currentPage < config.pagination.totalPages) {
         config.pagination.currentPage++;
     } else if (type === '<' && config.pagination.currentPage > 1) {
         config.pagination.currentPage--;
     }
 
-    main(); // Atualiza a tabela após mudar a página
-};
+    main();
+}
 
 async function main() {
     await loadPlayers();
+    await loadWeeklyPlayers(); // Carrega os dados semanais
 
-    const filtered = config.listPlayers.filter(p =>
-        p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter) ||
-        p.uid.includes(config.fieldFilter)
+    const filtered = (config.showWeekly ? config.weeklyPlayers : config.listPlayers).filter(p =>
+        (p.name && p.name.toLowerCase().replace(/\s+/g, '').includes(config.fieldFilter)) ||
+        (p.uid && p.uid.includes(config.fieldFilter))
     );
 
     const filteredAndSorted = sortPlayers(filtered);
@@ -179,3 +244,19 @@ const title = document.getElementById('title');
 title.addEventListener('click', () => {
     location.reload(); // Recarrega a página
 });
+
+// Função para alternar entre ranking geral e ranking semanal
+function toggleRanking(type) {
+    config.showWeekly = type === 'weekly';
+    config.pagination.currentPage = 1;
+
+    if (config.showWeekly) {
+        toggleGeneralButton.classList.remove('selected');
+        toggleWeeklyButton.classList.add('selected');
+    } else {
+        toggleGeneralButton.classList.add('selected');
+        toggleWeeklyButton.classList.remove('selected');
+    }
+
+    main();
+}

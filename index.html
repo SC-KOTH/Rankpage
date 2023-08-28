@@ -1,65 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Este é o site de ranking de jogadores do SC KOTH Brasil. Veja as posições, baixas, mortes, tiro mais longo, e mais estatísticas dos jogadores.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <title>Ranking de Jogadores</title>
-    <link rel="preload" href="/BlackOpsOne-Regular.ttf" as="font" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-</head>
-<body>
-    <header class="header">
-        <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank">
-            <img src="logo.png" alt="Logo da Empresa" class="logo">
-        </a>
-        <div class="header-content">
-            <h1 id="title">RANK SC KOTH BRASIL</h1>
-        </div>
-        <div class="header-icons">
-            <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank" class="discord-link">
-                <i class="fab fa-discord"></i>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Este é o site de ranking de jogadores da SC KOTH Brasil. Veja as posições, baixas, mortes, tiro mais longo, e mais estatísticas dos jogadores.">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="styles.css">
+        <title>Ranking de Jogadores</title>
+        <link rel="preload" href="/BlackOpsOne-Regular.ttf" as="font" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    </head>
+    <body>
+        <header class="header">
+            <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank">
+                <img src="logo.png" alt="Logo da Empresa" class="logo">
             </a>
-        </div>
-    </header>
-    <main>
-        <section class="background-video">
-            <div class="video-container">
-                <video autoplay muted loop id="bg-video">
-                    <source src="video.mp4" type="video/mp4">
-                </video>
+            <div class="header-content">
+                <h1 id="title">RANK SC KOTH BRASIL</h1>
             </div>
-            <section class="ranking">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Posição<i class="sort-icon fas fa-sort" data-column="position"></i></th>
-                                <th>Jogador</th>
-                                <th>Baixas<i class="sort-icon fas fa-sort" data-column="kills"></i></th>
-                                <th>Mortes<i class="sort-icon fas fa-sort" data-column="deaths"></i></th>
-                                <th>Tiro Mais Longo<i class="sort-icon fas fa-sort" data-column="longestShot"></i></th>
-                                <th>HS mais longo<i class="sort-icon fas fa-sort" data-column="headshotLongest"></i></th>
-                                <th>Maior Kill Streak<i class="sort-icon fas fa-sort" data-column="killStreak"></i></th>
-                                <th>K/D<i class="sort-icon fas fa-sort" data-column="kd"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body"></tbody>
-                    </table>
+            <div class="header-icons">
+                <a href="https://discord.gg/sc-koth-brasil-1020532948098883675" target="_blank" class="discord-link">
+                    <i class="fab fa-discord"></i>
+                </a>
+            </div>
+        </header>
+        <main>
+            <section class="background-video">
+                <div class="video-container">
+                    <video autoplay muted loop id="bg-video">
+                        <source src="video.mp4" type="video/mp4">
+                    </video>
                 </div>
-                <div class="pagination">
-                    <button id="prev-page">Anterior</button>
-                    <div class="search-box">
-                        <i class="fas fa-search" id="search-icon"></i>
-                        <input type="text" id="search-input" placeholder="Buscar Jogador   Nick/UID">
+                <section class="ranking">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Posição<i class="sort-icon fas fa-sort" data-column="position"></i></th>
+                                    <th>Jogador</th>
+                                    <th>Baixas<i class="sort-icon fas fa-sort" data-column="kills"></i></th>
+                                    <th>Mortes<i class="sort-icon fas fa-sort" data-column="deaths"></i></th>
+                                    <th>Tiro Mais Longo<i class="sort-icon fas fa-sort" data-column="longestShot"></i></th>
+                                    <th>HS mais longo<i class="sort-icon fas fa-sort" data-column="headshotLongest"></i></th>
+                                    <th>Maior Kill Streak<i class="sort-icon fas fa-sort" data-column="killStreak"></i></th>
+                                    <th>K/D<i class="sort-icon fas fa-sort" data-column="kd"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
                     </div>
-                    <button id="next-page">Próxima</button>
-                </div>
+                    <div class="pagination">
+                        <div>
+                        <button class="paginas" id="prev-page">Anterior</button>
+                        <button class="paginas" id="next-page">Próxima</button>
+                    </div>
+                        <div class="search-box">
+                            <i class="fas fa-search" id="search-icon"></i>
+                            <input type="text" id="search-input" placeholder="Buscar Jogador   Nick/UID">
+                        </div>
+                        <div class="toggle-buttons">
+                            <button id="toggle-general" class="table-toggle-btn selected">Geral</button>
+                            <button id="toggle-weekly" class="table-toggle-btn">Semanal</button>                     
+                        </div>
+                    </div>
+                </section>
             </section>
-        </section>
-    </main>
-    <script src="script.js"></script>
-</body>
-</html>
+        </main>
+        <script src="script.js"></script>
+    </body>
+    </html>
